@@ -17,7 +17,7 @@ public abstract class MovableEntity extends GameEntity{
         this.getPoint().setY(this.getPoint().getY() + STEP_SIZE * direction.getY());
     }
 
-    // Determines whether the player meets another entity using the condition defined in project 1 specification
+    // Determines whether a movable entity meets another entity using the condition defined in project 1 specification
     public boolean meet(Point point2){
         if(this.getPoint().distanceTo(point2) < MEET_CONDITION){
             return true;

@@ -1,4 +1,8 @@
 public class Bullet extends MovableEntity{
+    /*
+     * Bullet class which the player possesses; inherits from the MovableEntity class (which inherits from the
+     * GameEntity class)
+     */
 
     private static final double BULLET_STEP_SIZE = 25;
     private static final int PLAYER_SHOOT_ENERGY_CONSUMED = 3;

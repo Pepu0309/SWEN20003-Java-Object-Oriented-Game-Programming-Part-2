@@ -1,6 +1,11 @@
 import bagel.Image;
 
 public abstract class GameEntity {
+    /*
+     * Superclass of GameEntity which all subclasses inherit from; defines common attributes and methods of all the
+     * other entities
+     */
+
     // Point that provides information of the player's coordinates
     private Point point;
     private Image entityImage;

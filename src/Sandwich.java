@@ -1,11 +1,14 @@
 import bagel.Image;
 public class Sandwich extends GameEntity{
-    // Sandwich class which contains all attributes and behaviour associated with Sandwich
+    /*
+     Sandwich class which contains all attributes and behaviour associated with Sandwich; inherits from the
+     GameEntity class
+     */
 
     // Constant: the amount of energy gained when the player consumes a sandwich from algorithm 1
     private static final int PLAYER_ENERGY_GAINED = 5;
 
-    // Static attribute that tracks the number of sandwich objects
+    // Static attribute that tracks the number of Sandwich objects
     private static int numSandwiches;
 
     public Sandwich(double x, double y){

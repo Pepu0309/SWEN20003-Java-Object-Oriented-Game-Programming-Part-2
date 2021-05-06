@@ -1,6 +1,9 @@
 import bagel.*;
 public class Player extends MovableEntity{
-    // Player class which contains all attributes and behaviour associated with the player
+    /*
+     * Player class which contains all attributes and behaviour associated with the player; inherits from the
+     * MovableEntity class (which inherits from the GameEntity class)
+     */
 
     // Constant: energy amount that the player needs to have to go towards a zombie from algorithm 1
     private static final int ENERGY_REQUIRED_MOVE_TOWARDS_ZOMBIE = 3;

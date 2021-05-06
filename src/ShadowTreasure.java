@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 /**
  * An example Bagel game.
@@ -42,8 +44,12 @@ public class ShadowTreasure extends AbstractGame {
     // Initialise object of Font class from Bagel packaged as instructed by project specification
     private final Font energyFont = new Font("res/font/DejaVuSans-Bold.ttf", 20);
 
-    public static void printInfo(double x, double y, int e) {
-        System.out.println(df.format(x) + "," + df.format(y) + "," + e);
+    public static void writeBulletInfo(double x, double y, String filename) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))){
+            pw.println(df.format(x) + "," + df.format(y));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public ShadowTreasure() throws IOException {
@@ -132,6 +138,7 @@ public class ShadowTreasure extends AbstractGame {
                 ENERGY_LEVEL_TEXT_POINT.getY(), energyFontDrawOptions.setBlendColour(Colour.BLACK));
 
     }
+
 
     // Method called to update the game status every tick
     public void updateTick(){
