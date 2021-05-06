@@ -7,11 +7,11 @@ public class Player extends MovableEntity{
 
     // Constant: energy amount that the player needs to have to go towards a zombie from algorithm 1
     private static final int ENERGY_REQUIRED_MOVE_TOWARDS_ZOMBIE = 3;
-    // Constant: step size as defined in project specification
+    // Constant: player's step size as defined in project specification
     private static final double PLAYER_STEP_SIZE = 10;
-    // Constant: the condition used to determine when 2 points meet
+    // Constant: the condition used to determine when the player meets another entity
     private static final double PLAYER_MEET_CONDITION = 50;
-    // Constant: the condition used to determine when 2 points meet
+    // Constant: the maximum distance of which the player can shoot a bullet
     private static final double PLAYER_SHOOTING_RANGE = 150;
 
     private int energyLevel;
@@ -27,6 +27,11 @@ public class Player extends MovableEntity{
         double directionX = (point2.getX() - this.getPoint().getX())/(this.getPoint().distanceTo(point2));
         double directionY = (point2.getY() - this.getPoint().getY())/(this.getPoint().distanceTo(point2));
         this.setDirection(new Point(directionX, directionY));
+    }
+
+    public void shootBulletClosestZombie(Point shootDirection){
+        bullet.setDirection(shootDirection);
+        bullet.setToDraw(true);
     }
 
     public int getEnergyLevel() {

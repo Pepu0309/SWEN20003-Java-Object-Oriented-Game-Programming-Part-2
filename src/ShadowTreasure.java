@@ -44,6 +44,7 @@ public class ShadowTreasure extends AbstractGame {
     // Initialise object of Font class from Bagel packaged as instructed by project specification
     private final Font energyFont = new Font("res/font/DejaVuSans-Bold.ttf", 20);
 
+    // Writes the bullet's position info to a given filename as per the project specification
     public static void writeBulletInfo(double x, double y, String filename) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(filename))){
             pw.println(df.format(x) + "," + df.format(y));
@@ -91,10 +92,11 @@ public class ShadowTreasure extends AbstractGame {
                 } else if (entityType.equals("Sandwich")){
                     sandwichesArrayList.add(new Sandwich(Double.parseDouble(currentCSVRow[1]),
                             Double.parseDouble(currentCSVRow[2])));
+
                 } else if (entityType.equals("Treasure")){
                     treasure = new Treasure(Double.parseDouble(currentCSVRow[1]),
                             Double.parseDouble(currentCSVRow[2]));
-            }
+                }
             }
 
         } catch (Exception e) {
