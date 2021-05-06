@@ -4,6 +4,7 @@ import bagel.util.Colour;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -28,8 +29,9 @@ public class ShadowTreasure extends AbstractGame {
 
     // Declare entities and initialise background according to instructions from specification
     private Player player;
-    private Zombie zombie;
-    private Sandwich sandwich;
+    private ArrayList<Zombie> zombiesArrayList = new ArrayList<Zombie>();
+    private ArrayList<Sandwich> sandwichesArrayList = new ArrayList<Sandwich>();
+    private Treasure treasure;
     private final Image background = new Image("res/images/background.png");
 
     // Counting the number of frames from 1 as instructed by the project specification
@@ -77,11 +79,16 @@ public class ShadowTreasure extends AbstractGame {
                             Integer.parseInt(currentCSVRow[3]));
 
                 } else if (entityType.equals("Zombie")){
-                    zombie = new Zombie(Double.parseDouble(currentCSVRow[1]), Double.parseDouble(currentCSVRow[2]));
+                    zombiesArrayList.add(new Zombie(Double.parseDouble(currentCSVRow[1]),
+                            Double.parseDouble(currentCSVRow[2])));
 
                 } else if (entityType.equals("Sandwich")){
-                    sandwich = new Sandwich(Double.parseDouble(currentCSVRow[1]), Double.parseDouble(currentCSVRow[2]));
-                }
+                    sandwichesArrayList.add(new Sandwich(Double.parseDouble(currentCSVRow[1]),
+                            Double.parseDouble(currentCSVRow[2])));
+                } else if (entityType.equals("Treasure")){
+                    treasure = new Treasure(Double.parseDouble(currentCSVRow[1]),
+                            Double.parseDouble(currentCSVRow[2]));
+            }
             }
 
         } catch (Exception e) {
@@ -113,8 +120,12 @@ public class ShadowTreasure extends AbstractGame {
     public void displayAll(){
         background.drawFromTopLeft(WINDOW_TOP_LEFT.getX(), WINDOW_TOP_LEFT.getY());
         player.drawEntity();
-        zombie.drawEntity();
-        sandwich.drawEntity();
+        for(Zombie curZombie: zombiesArrayList){
+            curZombie.drawEntity();
+        }
+        for(Sandwich curSandwich: sandwichesArrayList){
+            curSandwich.drawEntity();
+        }
 
         // Draws the energy level of player at coordinates (20, 760) with the colour being black
         energyFont.drawString(String.format("energy: %d", player.getEnergyLevel()), ENERGY_LEVEL_TEXT_POINT.getX(),
