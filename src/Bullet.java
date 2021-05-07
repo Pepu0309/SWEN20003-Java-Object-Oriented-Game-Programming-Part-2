@@ -13,6 +13,10 @@ public class Bullet extends MovableEntity{
     // Constant: the point used to instantiate the bullet object
     private static final Point DEFAULT_BULLET_POSITION = new Point(0,0);
 
+    /*
+     * boolean attribute which determines whether to draw the bullet on screen. Bullet is only drawn if it has been
+     * shot by a player and has not hit a zombie.
+     */
     private boolean toDraw = false;
 
     /*
@@ -26,6 +30,7 @@ public class Bullet extends MovableEntity{
     }
 
     @Override
+    // Bullet goes through a check of whether it needs to be drawn before it is actually drawn.
     public void drawEntity() {
         if(toDraw == true){
             super.drawEntity();

@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 /**
  * An example Bagel game.
  */
-public class ShadowTreasure extends AbstractGame {
+public class ShadowTreasure<T extends GameEntity> extends AbstractGame {
 
     // Some constants to be used in the operation of the ShadowTreasure Class
 

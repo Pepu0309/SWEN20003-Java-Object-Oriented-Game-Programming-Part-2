@@ -1,5 +1,7 @@
 import bagel.*;
-public class Player extends MovableEntity{
+import java.util.*;
+
+public class Player<T extends GameEntity> extends MovableEntity{
     /*
      * Player class which contains all attributes and behaviour associated with the player; inherits from the
      * MovableEntity class (which inherits from the GameEntity class)
@@ -29,9 +31,31 @@ public class Player extends MovableEntity{
         this.setDirection(new Point(directionX, directionY));
     }
 
+    // Player shoots a bullet to the closest zombie and sets the bullet's attribute so that it is drawn
     public void shootBulletClosestZombie(Point shootDirection){
         bullet.setDirection(shootDirection);
         bullet.setToDraw(true);
+    }
+
+    /*
+     * Method that finds the closest Zombie/Sandwich to the Player depending on the ArrayList parameter passed to it.
+     * Returns a null reference if the ArrayList argument given doesn't contain anything; otherwise returns the point
+     * of the closest Zombie/Sandwich to the Player.
+     */
+    public Point findClosest(ArrayList<T> entityArray){
+        double minDistance = 0;
+        double curDistance;
+        Point closestEntityPoint = null;
+        if (entityArray.size() >= 1) {
+            for (T entity : entityArray) {
+                curDistance = this.getPoint().distanceTo(entity.getPoint());
+                if (curDistance > minDistance) {
+                    minDistance = curDistance;
+                    closestEntityPoint = entity.getPoint();
+                }
+            }
+        }
+        return closestEntityPoint;
     }
 
     public int getEnergyLevel() {
