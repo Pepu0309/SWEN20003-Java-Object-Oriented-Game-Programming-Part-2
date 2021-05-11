@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 /**
  * An example Bagel game.
  */
-public class ShadowTreasure<T extends GameEntity> extends AbstractGame {
+public class ShadowTreasure extends AbstractGame {
 
     // Some constants to be used in the operation of the ShadowTreasure Class
 
@@ -45,8 +45,8 @@ public class ShadowTreasure<T extends GameEntity> extends AbstractGame {
     private final Font energyFont = new Font("res/font/DejaVuSans-Bold.ttf", 20);
 
     // Writes the bullet's position info to a given filename as per the project specification
-    public static void writeBulletInfo(double x, double y, String filename) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))){
+    public static void writeBulletInfo(double x, double y) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("res/IO/output.csv", true))){
             pw.println(df.format(x) + "," + df.format(y));
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,6 +57,9 @@ public class ShadowTreasure<T extends GameEntity> extends AbstractGame {
         this.loadEnvironment("res/IO/environment.csv");
         // Add code to initialize other attributes as needed
 
+        // Create a file writer object to wipe the contents in res/IO/output.csv
+        FileWriter fw = new FileWriter("res/IO/output.csv");
+        fw.write("");
     }
 
     /**
@@ -134,6 +137,8 @@ public class ShadowTreasure<T extends GameEntity> extends AbstractGame {
         for(Sandwich curSandwich: sandwichesArrayList){
             curSandwich.drawEntity();
         }
+        treasure.drawEntity();
+        player.getBullet().drawEntity();
 
         // Draws the energy level of player at coordinates (20, 760) with the colour being black
         energyFont.drawString(String.format("energy: %d", player.getEnergyLevel()), ENERGY_LEVEL_TEXT_POINT.getX(),
@@ -141,34 +146,90 @@ public class ShadowTreasure<T extends GameEntity> extends AbstractGame {
 
     }
 
+    public boolean gameWin(){
+        if(player.meet(treasure.getPoint()) && treasure.isReachable()){
+            treasure.setPlayerHasReached(true);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean gameLose(){
+        if(player.getEnergyLevel() < 3 && Zombie.getNumZombies() > 0 && Sandwich.getNumSandwiches() == 0
+            && !player.getBullet().toDraw()){
+            return true;
+        }
+        return false;
+    }
+
+    // Method used to check whether the conditions have been met for the game to end
+    public void checkGameEndConditions(){
+        if (gameWin() || gameLose()){
+            endGame();
+        }
+    }
+
+    // Method that the checkGameEndConditions method calls to end the game if the conditions have been met
+    public void endGame(){
+        System.out.print(player.getEnergyLevel());
+        if(treasure.playerHasReached()){
+            System.out.println(",success!");
+        }
+        // Close the window and exit the program
+        Window.close();
+        System.exit(SUCCESSFUL_TERMINATION);
+    }
+
+    public void playerInteractsWithEntities(){
+        /*
+         * If a player meets a sandwich, the logic will be handled in the Player class; the ShadowTreasure class
+         * only needs to know that the player has met a sandwich and the method finishes executing if that's the case.
+         */
+        if(player.playerMeetsASandwich(sandwichesArrayList)){
+            return;
+        /*
+         * Otherwise the player then checks that if it's in shooting range of any zombie; the logic is handled by the
+         * player class once again. Therefore, the method finishes executing if the player can shoot (and does shoot)
+         * a bullet towards a zombie
+         */
+        } else if (player.playerCanShootZombie(zombiesArrayList)){
+            return;
+        }
+
+        // Similarly, if both conditions are not met, the method doesn't do anything and finishes executing
+
+    }
+
+    public void setPlayerMovingDirection(){
+        if(zombiesArrayList.size() == 0){
+            treasure.setReachable(true);
+            player.setDirection(player.calculateDirection(treasure.getPoint()));
+        } else if (player.getEnergyLevel() >= Player.getPlayerEnergyGoesTowardsZombie()){
+            player.findClosest(zombiesArrayList);
+        } else {
+            player.findClosest(sandwichesArrayList);
+        }
+
+        player.moveStep();
+    }
 
     // Method called to update the game status every tick
     public void updateTick(){
 
         // Algorithm 1 from the specification, called every game tick
-        if (player.meet(zombie.getPoint())){
-            player.setEnergyLevel(player.getEnergyLevel() - Zombie.getPlayerEnergyLoss());
 
-            // prints information of the player right before game is terminated
-            printInfo(player.getPoint().getX(), player.getPoint().getY(), player.getEnergyLevel());
+        // Checks if the conditions are met for the game to end, if the the conditions are met then the game is ended
+        checkGameEndConditions();
 
-            // Close the window and exit the program
-            Window.close();
-            System.exit(SUCCESSFUL_TERMINATION);
-
-        } else if (player.meet(sandwich.getPoint()) && !sandwich.isEaten()){
-            player.setEnergyLevel(player.getEnergyLevel() + Sandwich.getPlayerEnergyGained());
-            sandwich.setEaten(true);
+        // Otherwise the program executes everything else
+        playerInteractsWithEntities();
+        setPlayerMovingDirection();
+        
+        if(player.getBullet().toDraw()){
+            player.getBullet().moveStep();
+            writeBulletInfo(player.getBullet().getPoint().getX(), player.getBullet().getPoint().getY());
         }
-
-        // prints the information of the player right before moving
-        printInfo(player.getPoint().getX(), player.getPoint().getY(), player.getEnergyLevel());
-        if (player.getEnergyLevel() >= Player.getPlayerEnergyGoesTowardsZombie()){
-            player.setPlayerDirectionTo(zombie.getPoint());
-        } else {
-            player.setPlayerDirectionTo(sandwich.getPoint());
-        }
-        player.moveStep();
+        player.getBullet().killsZombie(zombiesArrayList);
 
     }
 

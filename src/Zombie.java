@@ -11,6 +11,7 @@ public class Zombie extends GameEntity{
 
     public Zombie(double x, double y){
         super(x, y, "res/images/zombie.png");
+        numZombies++;
     }
 
     public static int getNumZombies() {

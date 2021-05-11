@@ -3,7 +3,7 @@ public abstract class MovableEntity extends GameEntity{
     private final double STEP_SIZE;
     private final double MEET_CONDITION;
 
-    private Point direction;
+    private Point direction = new Point(0,0);
 
     public MovableEntity(double x, double y, String imageFileSource, double STEP_SIZE, double MEET_CONDITION) {
         super(x, y, imageFileSource);

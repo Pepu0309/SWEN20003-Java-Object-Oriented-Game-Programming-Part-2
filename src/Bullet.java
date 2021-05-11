@@ -1,3 +1,4 @@
+import java.util.*;
 public class Bullet extends MovableEntity{
     /*
      * Bullet class which the player possesses; inherits from the MovableEntity class (which inherits from the
@@ -26,22 +27,37 @@ public class Bullet extends MovableEntity{
      */
     public Bullet(){
         super(DEFAULT_BULLET_POSITION.getX(), DEFAULT_BULLET_POSITION.getY(),
-                "res/images/bullet.png", BULLET_STEP_SIZE, BULLET_MEET_CONDITION);
+                "res/images/shot.png", BULLET_STEP_SIZE, BULLET_MEET_CONDITION);
     }
 
     @Override
     // Bullet goes through a check of whether it needs to be drawn before it is actually drawn.
     public void drawEntity() {
-        if(toDraw == true){
+        if(toDraw){
             super.drawEntity();
         }
     }
 
-    public boolean isToDraw() {
+    public void killsZombie(ArrayList<Zombie> zombieArrayList){
+        for(Zombie zombie: zombieArrayList){
+            if (meet(zombie.getPoint())){
+                toDraw = false;
+                zombieArrayList.remove(zombie);
+                zombieArrayList.trimToSize();
+                break;
+            }
+        }
+    }
+
+    public boolean toDraw() {
         return toDraw;
     }
 
     public void setToDraw(boolean toDraw) {
         this.toDraw = toDraw;
+    }
+
+    public static int getPlayerShootEnergyConsumed() {
+        return PLAYER_SHOOT_ENERGY_CONSUMED;
     }
 }

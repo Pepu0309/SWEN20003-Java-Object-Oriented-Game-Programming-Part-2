@@ -13,6 +13,7 @@ public class Sandwich extends GameEntity{
 
     public Sandwich(double x, double y){
         super(x, y, "res/images/sandwich.png");
+        numSandwiches++;
     }
 
     public static int getPlayerEnergyGained() {
@@ -26,5 +27,6 @@ public class Sandwich extends GameEntity{
     public static void setNumSandwiches(int numSandwiches) {
         Sandwich.numSandwiches = numSandwiches;
     }
+
 }
 

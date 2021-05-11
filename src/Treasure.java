@@ -15,7 +15,7 @@ public class Treasure extends GameEntity{
         isReachable = reachable;
     }
 
-    public boolean isPlayerHasReached() {
+    public boolean playerHasReached() {
         return playerHasReached;
     }
 
