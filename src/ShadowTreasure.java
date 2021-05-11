@@ -146,14 +146,16 @@ public class ShadowTreasure extends AbstractGame {
 
     }
 
+    // Checking the conditions for a victory, player must meet the treasure when it is reachable.
     public boolean gameWin(){
-        if(player.meet(treasure.getPoint()) && treasure.isReachable()){
+        if(player.meet(treasure.getPoint(), Player.getPlayerMeetCondition()) && treasure.isReachable()){
             treasure.setPlayerHasReached(true);
             return true;
         }
         return false;
     }
 
+    // Checking the conditions for the game to be lost, all individual conditions have to be satisfied.
     public boolean gameLose(){
         if(player.getEnergyLevel() < 3 && Zombie.getNumZombies() > 0 && Sandwich.getNumSandwiches() == 0
             && !player.getBullet().toDraw()){
@@ -165,6 +167,7 @@ public class ShadowTreasure extends AbstractGame {
     // Method used to check whether the conditions have been met for the game to end
     public void checkGameEndConditions(){
         if (gameWin() || gameLose()){
+
             endGame();
         }
     }
@@ -183,17 +186,18 @@ public class ShadowTreasure extends AbstractGame {
     public void playerInteractsWithEntities(){
         /*
          * If a player meets a sandwich, the logic will be handled in the Player class; the ShadowTreasure class
-         * only needs to know that the player has met a sandwich and the method finishes executing if that's the case.
+         * only needs to know that the player has met a sandwich, the total number of sandwiches is decreased by 1
+         * and the method finishes executing if that's the case.
          */
         if(player.playerMeetsASandwich(sandwichesArrayList)){
-            return;
+            Sandwich.setNumSandwiches(Sandwich.getNumSandwiches() - 1);
         /*
-         * Otherwise the player then checks that if it's in shooting range of any zombie; the logic is handled by the
+         * Otherwise the player then checks if it's in shooting range of any zombie; the logic is handled by the
          * player class once again. Therefore, the method finishes executing if the player can shoot (and does shoot)
-         * a bullet towards a zombie
+         * a bullet towards a zombie.
          */
         } else if (player.playerCanShootZombie(zombiesArrayList)){
-            return;
+            // Don't need to do anything else here.
         }
 
         // Similarly, if both conditions are not met, the method doesn't do anything and finishes executing
@@ -210,7 +214,7 @@ public class ShadowTreasure extends AbstractGame {
             player.findClosest(sandwichesArrayList);
         }
 
-        player.moveStep();
+        player.moveStep(Player.getPlayerStepSize());
     }
 
     // Method called to update the game status every tick
@@ -224,12 +228,15 @@ public class ShadowTreasure extends AbstractGame {
         // Otherwise the program executes everything else
         playerInteractsWithEntities();
         setPlayerMovingDirection();
-        
+
         if(player.getBullet().toDraw()){
-            player.getBullet().moveStep();
+            player.getBullet().moveStep(Bullet.getBulletStepSize());
             writeBulletInfo(player.getBullet().getPoint().getX(), player.getBullet().getPoint().getY());
         }
-        player.getBullet().killsZombie(zombiesArrayList);
+
+        if(player.getBullet().killsZombie(zombiesArrayList)){
+            Zombie.setNumZombies(Zombie.getNumZombies() -1);
+        }
 
     }
 

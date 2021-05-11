@@ -26,8 +26,7 @@ public class Bullet extends MovableEntity{
      * and Algorithm 1 in the ShadowTreasure class.
      */
     public Bullet(){
-        super(DEFAULT_BULLET_POSITION.getX(), DEFAULT_BULLET_POSITION.getY(),
-                "res/images/shot.png", BULLET_STEP_SIZE, BULLET_MEET_CONDITION);
+        super(DEFAULT_BULLET_POSITION.getX(), DEFAULT_BULLET_POSITION.getY(), "res/images/shot.png");
     }
 
     @Override
@@ -38,16 +37,14 @@ public class Bullet extends MovableEntity{
         }
     }
 
-    public void killsZombie(ArrayList<Zombie> zombieArrayList){
-        for(Zombie zombie: zombieArrayList){
-            if (meet(zombie.getPoint())){
-                toDraw = false;
-                zombieArrayList.remove(zombie);
-                zombieArrayList.trimToSize();
-                break;
-            }
+    public boolean killsZombie(ArrayList<Zombie> zombieArrayList){
+        if (entityInteractsWithOneOfGroup(zombieArrayList, BULLET_MEET_CONDITION)){
+            this.toDraw = false;
+            return true;
         }
+        return false;
     }
+
 
     public boolean toDraw() {
         return toDraw;
@@ -59,5 +56,9 @@ public class Bullet extends MovableEntity{
 
     public static int getPlayerShootEnergyConsumed() {
         return PLAYER_SHOOT_ENERGY_CONSUMED;
+    }
+
+    public static double getBulletStepSize() {
+        return BULLET_STEP_SIZE;
     }
 }

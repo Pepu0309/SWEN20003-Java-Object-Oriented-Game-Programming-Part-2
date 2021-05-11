@@ -19,8 +19,9 @@ public class Player<T extends GameEntity> extends MovableEntity{
     private int energyLevel;
     private Bullet bullet = new Bullet();
 
+    // Direction is left uninitialised at the start of the game as algorithm 1 hasn't been ran yet
     public Player(double x, double y, int energyLevel){
-        super(x, y, "res/images/player.png", PLAYER_STEP_SIZE, PLAYER_MEET_CONDITION);
+        super(x, y, "res/images/player.png");
         this.energyLevel = energyLevel;
     }
 
@@ -79,23 +80,16 @@ public class Player<T extends GameEntity> extends MovableEntity{
      */
     public boolean playerMeetsASandwich(ArrayList<Sandwich> sandwichesArrayList){
 
-        // boolean flag used to determine if the player has met with at least one sandwich
-        boolean playerHasMetASandwich = false;
-        for(Sandwich sandwich: sandwichesArrayList) {
-            /*
-             * If a player eats the sandwich, the player eats it, gains energy and then the sandwich is tagged
-             * for removal
-             */
-            if (meet(sandwich.getPoint())) {
-                energyLevel += Sandwich.getPlayerEnergyGained();
-                playerHasMetASandwich = true;
-                sandwichesArrayList.remove(sandwich);
-                sandwichesArrayList.trimToSize();
-                break;
-            }
+        /*
+         * If a player meets a sandwich, the player eats it, gains energy and then the sandwich is tagged
+         * for removal
+         */
+        if (entityInteractsWithOneOfGroup(sandwichesArrayList, PLAYER_MEET_CONDITION)){
+            energyLevel += Sandwich.getPlayerEnergyGained();
+            return true;
         }
 
-        return playerHasMetASandwich;
+        return false;
     }
 
     /*
@@ -127,6 +121,14 @@ public class Player<T extends GameEntity> extends MovableEntity{
 
     public static int getPlayerEnergyGoesTowardsZombie() {
         return ENERGY_REQUIRED_MOVE_TOWARDS_ZOMBIE;
+    }
+
+    public static double getPlayerStepSize() {
+        return PLAYER_STEP_SIZE;
+    }
+
+    public static double getPlayerMeetCondition() {
+        return PLAYER_MEET_CONDITION;
     }
 
     public Bullet getBullet() {
