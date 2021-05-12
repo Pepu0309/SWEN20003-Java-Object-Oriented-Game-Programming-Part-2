@@ -158,7 +158,7 @@ public class ShadowTreasure extends AbstractGame {
     // Checking the conditions for the game to be lost, all individual conditions have to be satisfied.
     public boolean gameLose(){
         if(player.getEnergyLevel() < 3 && Zombie.getNumZombies() > 0 && Sandwich.getNumSandwiches() == 0
-            && !player.getBullet().toDraw()){
+                && !player.getBullet().toDraw()){
             return true;
         }
         return false;
@@ -193,11 +193,11 @@ public class ShadowTreasure extends AbstractGame {
             Sandwich.setNumSandwiches(Sandwich.getNumSandwiches() - 1);
         /*
          * Otherwise the player then checks if it's in shooting range of any zombie; the logic is handled by the
-         * player class once again. Therefore, the method finishes executing if the player can shoot (and does shoot)
-         * a bullet towards a zombie.
+         * player class once again. Therefore, the method writes the initial position of the bullet into output.csv
+         *  if the player can shoot (and does shoot) a bullet towards a zombie.
          */
         } else if (player.playerCanShootZombie(zombiesArrayList)){
-            // Don't need to do anything else here.
+            writeBulletInfo(player.getBullet().getPoint().getX(), player.getBullet().getPoint().getY());
         }
 
         // Similarly, if both conditions are not met, the method doesn't do anything and finishes executing
