@@ -62,7 +62,7 @@ public class ShadowTreasure extends AbstractGame {
     /**
      * Constructor for the ShadowTreasure class which initializes a ShadowTreasure game. Writes to output.csv with
      * an empty string to wipe the file of it's previous contents.
-     * 
+     *
      * @throws IOException when there is an error with loading environment.csv or doing an initial write to output.csv
      *                     to wipe it
      */
@@ -267,11 +267,16 @@ public class ShadowTreasure extends AbstractGame {
         playerInteractsWithEntities();
         setPlayerMovingDirection();
 
+        /*
+         * If the bullet needs to be drawn, that means it's shot by the player and the bullet needs to be moved and
+         * it's position written to output.csv
+         */
         if(player.getBullet().toDraw()){
             player.getBullet().moveStep(Bullet.getBulletStepSize());
             writeBulletInfo(player.getBullet().getPoint().getX(), player.getBullet().getPoint().getY());
         }
 
+        // If bullet kills a zombie, then the number of total zombies is decreased by 1
         if(player.getBullet().killsZombie(zombiesArrayList)){
             Zombie.setNumZombies(Zombie.getNumZombies() -1);
         }
