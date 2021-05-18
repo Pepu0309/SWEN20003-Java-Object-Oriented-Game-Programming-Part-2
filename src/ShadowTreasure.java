@@ -4,14 +4,13 @@ import bagel.util.Colour;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
 /**
- * An example Bagel game.
+ * ShadowTreasure class which is an example Bagel game.
  */
 public class ShadowTreasure extends AbstractGame {
 
@@ -25,6 +24,8 @@ public class ShadowTreasure extends AbstractGame {
     private static final Point ENERGY_LEVEL_TEXT_POINT = new Point(20, 760);
     // Constant: used to define the coordinates of the top left of the window
     private static final Point WINDOW_TOP_LEFT = new Point(0, 0);
+    // Constant: used to define the font size
+    private static final int FONT_SIZE = 20;
 
     // for rounding double number; use this to print the location of the player
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -42,9 +43,14 @@ public class ShadowTreasure extends AbstractGame {
     // Declare an object of DrawOptions class from Bagel package to be used later for displaying energy level of player
     private DrawOptions energyFontDrawOptions = new DrawOptions();
     // Initialise object of Font class from Bagel packaged as instructed by project specification
-    private final Font energyFont = new Font("res/font/DejaVuSans-Bold.ttf", 20);
+    private Font energyFont = new Font("res/font/DejaVuSans-Bold.ttf", FONT_SIZE);
 
-    // Writes the bullet's position info to a given filename as per the project specification
+    /**
+     * Writes the bullet's position info to the output.csv file as per the project specification
+
+     * @param x the current x coordinate of the bullet to be written to output.csv
+     * @param y the current y coordinate of the bullet to be written to output.csv
+     */
     public static void writeBulletInfo(double x, double y) {
         try (PrintWriter pw = new PrintWriter(new FileWriter("res/IO/output.csv", true))){
             pw.println(df.format(x) + "," + df.format(y));
@@ -53,6 +59,13 @@ public class ShadowTreasure extends AbstractGame {
         }
     }
 
+    /**
+     * Constructor for the ShadowTreasure class which initializes a ShadowTreasure game. Writes to output.csv with
+     * an empty string to wipe the file of it's previous contents.
+     * 
+     * @throws IOException when there is an error with loading environment.csv or doing an initial write to output.csv
+     *                     to wipe it
+     */
     public ShadowTreasure() throws IOException {
         this.loadEnvironment("res/IO/environment.csv");
         // Add code to initialize other attributes as needed
@@ -127,7 +140,10 @@ public class ShadowTreasure extends AbstractGame {
 
     }
 
-    // Display all entities to update their positions. Displays the static background first so it's behind.
+    /**
+     * Display all entities according to their current positions as well as the energy level.
+     * Displays the static background first so it's behind.
+     */
     public void displayAll(){
         background.drawFromTopLeft(WINDOW_TOP_LEFT.getX(), WINDOW_TOP_LEFT.getY());
         player.drawEntity();
@@ -146,7 +162,11 @@ public class ShadowTreasure extends AbstractGame {
 
     }
 
-    // Checking the conditions for a victory, player must meet the treasure when it is reachable.
+    /**
+     * Checking the conditions for a victory, player must meet the treasure when it is reachable.
+     *
+     * @return a boolean value true if the game win conditions have been met, false otherwise
+     */
     public boolean gameWin(){
         if(player.meet(treasure.getPoint(), Player.getPlayerMeetCondition()) && treasure.isReachable()){
             treasure.setPlayerHasReached(true);
@@ -155,7 +175,11 @@ public class ShadowTreasure extends AbstractGame {
         return false;
     }
 
-    // Checking the conditions for the game to be lost, all individual conditions have to be satisfied.
+    /**
+     * Checking the conditions for the game to be lost, all individual conditions have to be satisfied.
+     *
+     * @return a boolean value true if the game lose conditions have been met, false otherwise.
+     */
     public boolean gameLose(){
         if(player.getEnergyLevel() < 3 && Zombie.getNumZombies() > 0 && Sandwich.getNumSandwiches() == 0
                 && !player.getBullet().toDraw()){
@@ -164,15 +188,19 @@ public class ShadowTreasure extends AbstractGame {
         return false;
     }
 
-    // Method used to check whether the conditions have been met for the game to end
+    /**
+     * Method used to check whether the conditions have been met for the game to end. If either one of the game win or
+     * game lose conditions have been satisfied, the endGame method is called.
+     */
     public void checkGameEndConditions(){
         if (gameWin() || gameLose()){
-
             endGame();
         }
     }
 
-    // Method that the checkGameEndConditions method calls to end the game if the conditions have been met
+    /**
+     * Method that the checkGameEndConditions method calls to end the game if the conditions have been met.
+     */
     public void endGame(){
         System.out.print(player.getEnergyLevel());
         if(treasure.playerHasReached()){
@@ -183,6 +211,10 @@ public class ShadowTreasure extends AbstractGame {
         System.exit(SUCCESSFUL_TERMINATION);
     }
 
+    /**
+     * Method which is called by the updateTick method which encompasses the whole "Player Interacts with Entities"
+     * subsection of Algorithm 1.
+     */
     public void playerInteractsWithEntities(){
         /*
          * If a player meets a sandwich, the logic will be handled in the Player class; the ShadowTreasure class
@@ -204,6 +236,10 @@ public class ShadowTreasure extends AbstractGame {
 
     }
 
+    /**
+     * Method which is called by the updateTick method which encompasses the whole "Set Player Moving Direction"
+     * subsection of Algorithm 1.
+     */
     public void setPlayerMovingDirection(){
         if(zombiesArrayList.size() == 0){
             treasure.setReachable(true);
@@ -217,7 +253,9 @@ public class ShadowTreasure extends AbstractGame {
         player.moveStep(Player.getPlayerStepSize());
     }
 
-    // Method called to update the game status every tick
+    /**
+     * Method called to update the game status every tick
+     */
     public void updateTick(){
 
         // Algorithm 1 from the specification, called every game tick
