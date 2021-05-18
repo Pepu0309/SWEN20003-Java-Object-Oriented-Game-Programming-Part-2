@@ -257,7 +257,6 @@ public class ShadowTreasure extends AbstractGame {
      * Method called to update the game status every tick
      */
     public void updateTick(){
-
         // Algorithm 1 from the specification, called every game tick
 
         // Checks if the conditions are met for the game to end, if the the conditions are met then the game is ended
