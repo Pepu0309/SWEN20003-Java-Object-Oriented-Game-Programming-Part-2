@@ -259,7 +259,6 @@ public class ShadowTreasure extends AbstractGame {
     public void updateTick(){
         // Algorithm 1 from the specification, called every game tick
 
-
         // Checks if the conditions are met for the game to end, if the the conditions are met then the game is ended
         checkGameEndConditions();
 
@@ -275,7 +274,7 @@ public class ShadowTreasure extends AbstractGame {
             player.getBullet().moveStep(Bullet.getBulletStepSize());
             writeBulletInfo(player.getBullet().getPoint().getX(), player.getBullet().getPoint().getY());
         }
-        
+
         // If bullet kills a zombie, then the number of total zombies is decreased by 1
         if(player.getBullet().killsZombie(zombiesArrayList)){
             Zombie.setNumZombies(Zombie.getNumZombies() -1);
