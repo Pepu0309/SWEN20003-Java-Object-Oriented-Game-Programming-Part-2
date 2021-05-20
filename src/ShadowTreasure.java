@@ -241,7 +241,7 @@ public class ShadowTreasure extends AbstractGame {
      * subsection of Algorithm 1.
      */
     public void setPlayerMovingDirection(){
-        if(zombiesArrayList.size() == 0){
+        if(Zombie.getNumZombies() == 0){
             treasure.setReachable(true);
             player.setDirection(player.calculateDirection(treasure.getPoint()));
         } else if (player.getEnergyLevel() >= Player.getPlayerEnergyGoesTowardsZombie()){
